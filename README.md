@@ -69,3 +69,5 @@ You can adjust the colors and brightness on the web page.
 
 Network and tally settings can be edited on the built-in webpage. To access the webpage connect to the same WiFi network and navigate to the IP address in a browser.  
 On this webpage the WiFi SSID, WiFi password, vMix hostname, tally number, LED colors, LED brightness and VISCA settings can be changed. It also shows some basic information of the device. 
+
+![WebGUI](https://github.com/wasn-eu/vTally/raw/master/images/web.png)
