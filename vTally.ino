@@ -13,7 +13,7 @@
 #include "FS.h"
 
 // Constants
-const float vers = 1.6; 
+const float vers = 1.7;
 
 const int SsidMaxLength = 24;
 const int PassMaxLength = 24;
@@ -101,8 +101,8 @@ SoftwareSerial viscaSerial;
 int udpstate = 0;
 
 //// RS232 Serial Settings
-const int txpin = D5;
-const int rxpin = D6;
+const int txpin = D6;
+const int rxpin = D5;
 
 //// Use the following constants and functions to modify the speed of PTZ commands
 const double ZOOMMULT = 0.3;      // speed multiplier for the zoom functions
@@ -140,20 +140,19 @@ const uint8_t ifclearcompl[] = {0x90, 0x50, 0xff};
 int ifclearcomplength = 3;
 
 /*
- * Video formats values:
- * Value    HDMI    SDI
- * 0x00     1080p25 1080p25
- * 0x01     1080p30 1080p30
- * 0x02     1080p50 720p50
- * 0x03     1080p60 720p60
- * 0x04     720p25  720p25
- * 0x05     720p30  720p30
- * 0x06     720p50  720p50
- * 0x07     720p60  720p60
- */
+   Video formats values:
+   Value    HDMI    SDI
+   0x00     1080p25 1080p25
+   0x01     1080p30 1080p30
+   0x02     1080p50 720p50
+   0x03     1080p60 720p60
+   0x04     720p25  720p25
+   0x05     720p30  720p30
+   0x06     720p50  720p50
+   0x07     720p60  720p60
+*/
 const uint8_t format = 0x01;
 const uint8_t videoFormat[] = { 0x81, 0x01, 0x35, 0x00, format, 0x00, 0xff }; // 8x 01 35 0p 0q 0r ff p = reserved, q = video mode, r = Used in PrecisionHD 720p camera.
-
 
 
 // Load settings from EEPROM
@@ -204,7 +203,7 @@ void loadSettings()
   settings.prvgreen = EEPROM.read(ptr);
   ptr++;
   settings.prvblue = EEPROM.read(ptr);
-  
+
   ptr++;
   settings.offred = EEPROM.read(ptr);
   ptr++;
@@ -222,7 +221,7 @@ void loadSettings()
   ptr++;
   high = EEPROM.read(ptr);
   settings.viscaport = low + ((high << 8) & 0xFF00);
-  
+
 
   if (strlen(settings.ssid) == 0 || strlen(settings.pass) == 0 || strlen(settings.hostName) == 0 || settings.tallyNumber == 0 || settings.intensFull == 0 || settings.intensDim == 0 || settings.viscabaud == 0 || settings.viscaport == 0)
   {
@@ -310,7 +309,7 @@ void saveSettings()
   EEPROM.write(ptr, settings.viscaport & 0xFF);
   ptr++;
   EEPROM.write(ptr, (settings.viscaport >> 8) & 0xFF);
-  
+
   EEPROM.commit();
 
   Serial.println(F("| Settings saved"));
@@ -366,7 +365,7 @@ void ledSetIntensity(int intensity)
 // Set LED's off
 void ledSetOff()
 {
-  leds.setPixelColor(0, leds.Color(0,0,0));
+  leds.setPixelColor(0, leds.Color(0, 0, 0));
   ledSetIntensity(0);
   leds.show();
 }
@@ -374,7 +373,7 @@ void ledSetOff()
 // Draw corner dots
 void ledSetCornerDots()
 {
-  leds.setPixelColor(0, leds.Color(settings.offred,settings.offgreen,settings.offblue));
+  leds.setPixelColor(0, leds.Color(settings.offred, settings.offgreen, settings.offblue));
   ledSetIntensity(settings.intensDim);
   leds.show();
 }
@@ -382,7 +381,7 @@ void ledSetCornerDots()
 // Draw L(ive) with LED's
 void ledSetProgram()
 {
-  leds.setPixelColor(0, leds.Color(settings.prgred,settings.prggreen,settings.prgblue));
+  leds.setPixelColor(0, leds.Color(settings.prgred, settings.prggreen, settings.prgblue));
   ledSetIntensity(settings.intensFull);
   leds.show();
 }
@@ -390,7 +389,7 @@ void ledSetProgram()
 // Draw P(review) with LED's
 void ledSetPreview()
 {
-  leds.setPixelColor(0, leds.Color(settings.prvred,settings.prvgreen,settings.prvblue));
+  leds.setPixelColor(0, leds.Color(settings.prvred, settings.prvgreen, settings.prvblue));
   ledSetIntensity(settings.intensFull);
   leds.show();
 }
@@ -398,7 +397,7 @@ void ledSetPreview()
 // Draw C(onnecting) with LED's
 void ledSetConnecting()
 {
-  leds.setPixelColor(0, leds.Color(0,255,255));
+  leds.setPixelColor(0, leds.Color(0, 255, 255));
   ledSetIntensity(settings.intensDim);
   leds.show();
 }
@@ -406,7 +405,7 @@ void ledSetConnecting()
 // Draw S(ettings) with LED's
 void ledSetSettings()
 {
-  leds.setPixelColor(0, leds.Color(255,0,255));
+  leds.setPixelColor(0, leds.Color(255, 0, 255));
   ledSetIntensity(settings.intensDim);
   leds.show();
 }
@@ -479,7 +478,7 @@ void handleData(String data)
     vmixcon = 1;
     Serial.print(F("| Response from vMix: "));
     Serial.println(data);
-    
+
     //Serial.print(F("| FreeHeap: "));
     //Serial.println(ESP.getFreeHeap(),DEC);
   }
@@ -514,7 +513,7 @@ void apStart()
 void tallyPageHandler()
 {
   String response_message = F("<!DOCTYPE html>");
-  
+
   response_message += F("<html lang='en'>");
   response_message += F("<head>");
   response_message += F("<title>vTally by CaliHC - ") + String(deviceName) + F("</title>");
@@ -528,149 +527,153 @@ void tallyPageHandler()
   response_message += F("<body class='bg-light'>");
 
   response_message += F("<table class='table'><tbody  style='border-radius: 0px 0px 10px 10px;background-color:#d5dadd;'>");
-  
+
   response_message += F("<tr><th style='background-color:rgb(");
-  
-  if (vmixcon == 0) { currentState = '3'; }
-  if (vmixcon == 1 && (currentState != '0' && currentState != '1' && currentState != '2')) { currentState = 4; }
-  
+
+  if (vmixcon == 0) {
+    currentState = '3';
+  }
+  if (vmixcon == 1 && (currentState != '0' && currentState != '1' && currentState != '2')) {
+    currentState = 4;
+  }
+
   switch (currentState)
-      {
-        case '0':
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
-          break;
-        case '1':
-          response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
-          break;
-        case '2':
-          response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
-          break;
-        case '3':
-          response_message += F("255,0,0"); // no vMix Server
-          break;
-        case '4':
-          response_message += F("255,255,0"); // no vMix Server
-          break;
-        default:
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
-      }
+  {
+    case '0':
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
+      break;
+    case '1':
+      response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
+      break;
+    case '2':
+      response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
+      break;
+    case '3':
+      response_message += F("255,0,0"); // no vMix Server
+      break;
+    case '4':
+      response_message += F("255,255,0"); // no vMix Server
+      break;
+    default:
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
+  }
   response_message += F(");'>&nbsp;</th><tr>");
-  
-  
+
+
   response_message += F("<tr><th style='text-align:center;background-color:rgb(");
   switch (currentState)
-      {
-        case '0':
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
-          break;
-        case '1':
-          response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
-          break;
-        case '2':
-          response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
-          break;
-        case '3':
-          response_message += F("255,0,0"); // no vMix Server
-          break;
-        case '4':
-          response_message += F("255,255,0"); // no vMix Server
-          break;
-        default:
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
-      }
+  {
+    case '0':
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
+      break;
+    case '1':
+      response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
+      break;
+    case '2':
+      response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
+      break;
+    case '3':
+      response_message += F("255,0,0"); // no vMix Server
+      break;
+    case '4':
+      response_message += F("255,255,0"); // no vMix Server
+      break;
+    default:
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
+  }
   response_message += F(");color:");
   switch (currentState)
-      {
-        case '0':
-          response_message += F("#ffffff"); //off
-          break;
-        case '1':
-          response_message += F("#ffffff"); //prg
-          break;
-        case '2':
-          response_message += F("#ffffff"); //prv
-          break;
-        case '3':
-          response_message += F("#ffffff"); // no vMix Server
-          break;
-        case '4':
-          response_message += F("#ffffff"); // no vMix Server
-          break;
-        default:
-          response_message += F("#ffffff"); //default off
-      }
+  {
+    case '0':
+      response_message += F("#ffffff"); //off
+      break;
+    case '1':
+      response_message += F("#ffffff"); //prg
+      break;
+    case '2':
+      response_message += F("#ffffff"); //prv
+      break;
+    case '3':
+      response_message += F("#ffffff"); // no vMix Server
+      break;
+    case '4':
+      response_message += F("#ffffff"); // no vMix Server
+      break;
+    default:
+      response_message += F("#ffffff"); //default off
+  }
   response_message += F("'>");
   switch (currentState)
-      {
-        case '0':
-          response_message += F("OFF"); //off
-          break;
-        case '1':
-          response_message += F("PROGRAM"); //prg
-          break;
-        case '2':
-          response_message += F("PREVIEW"); //prv
-          break;
-        case '3':
-          response_message += F("vMix Server not found!"); // no vMix Server
-          break;
-        case '4':
-          response_message += F("connected to vMix Server, waiting for data."); // no vMix Server
-          break;
-        default:
-          response_message += F("OFF"); //default off
-      }
+  {
+    case '0':
+      response_message += F("OFF"); //off
+      break;
+    case '1':
+      response_message += F("PROGRAM"); //prg
+      break;
+    case '2':
+      response_message += F("PREVIEW"); //prv
+      break;
+    case '3':
+      response_message += F("vMix Server not found!"); // no vMix Server
+      break;
+    case '4':
+      response_message += F("connected to vMix Server, waiting for data."); // no vMix Server
+      break;
+    default:
+      response_message += F("OFF"); //default off
+  }
   response_message += F("</th></tr>");
 
-  
+
   response_message += F("<tr><th style='background-color:rgb(");
   switch (currentState)
-      {
-        case '0':
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
-          break;
-        case '1':
-          response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
-          break;
-        case '2':
-          response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
-          break;
-        case '3':
-          response_message += F("255,0,0"); // no vMix Server
-          break;
-        case '4':
-          response_message += F("255,255,0"); // no vMix Server
-          break;
-        default:
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
-      }
+  {
+    case '0':
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
+      break;
+    case '1':
+      response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
+      break;
+    case '2':
+      response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
+      break;
+    case '3':
+      response_message += F("255,0,0"); // no vMix Server
+      break;
+    case '4':
+      response_message += F("255,255,0"); // no vMix Server
+      break;
+    default:
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
+  }
   response_message += F(");'>&nbsp;</th><tr>");
-  
+
   response_message += F("<tr><th style='border-radius: 0px 0px 10px 10px;background-color:rgb(");
   switch (currentState)
-      {
-        case '0':
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
-          break;
-        case '1':
-          response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
-          break;
-        case '2':
-          response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
-          break;
-        case '3':
-          response_message += F("255,0,0"); // no vMix Server
-          break;
-        case '4':
-          response_message += F("255,255,0"); // no vMix Server
-          break;
-        default:
-          response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
-      }
+  {
+    case '0':
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //off
+      break;
+    case '1':
+      response_message += String(settings.prgred) + F(",") + String(settings.prggreen) + F(",") + String(settings.prgblue); //prg
+      break;
+    case '2':
+      response_message += String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue); //prv
+      break;
+    case '3':
+      response_message += F("255,0,0"); // no vMix Server
+      break;
+    case '4':
+      response_message += F("255,255,0"); // no vMix Server
+      break;
+    default:
+      response_message += String(settings.offred) + F(",") + String(settings.offgreen) + F(",") + String(settings.offblue); //default off
+  }
   response_message += F(");'>&nbsp;</th><tr>");
-  
+
   response_message += F("</tbody></table>");
-  
+
   response_message += F("</body></html>");
 
   httpServer.sendHeader("Connection", "close");
@@ -693,7 +696,7 @@ void rootPageHandler()
   response_message += F("<link rel='stylesheet' href='styles.css'>");
   response_message += F("<script src='jquery.slim.min.js'></script>");
   response_message += F("<script type='text/javascript'>");
-  response_message += F("var ESPurl = 'http://")+ WiFi.localIP().toString() + F("/zend';");
+  response_message += F("var ESPurl = 'http://") + WiFi.localIP().toString() + F("/zend';");
   response_message += F("if(typeof(EventSource) !== 'undefined') {");
   response_message += F("  var source = new EventSource(ESPurl);");
   response_message += F("  source.onmessage = function(event) {");
@@ -707,12 +710,12 @@ void rootPageHandler()
   response_message += F("        $('#vmixstatus').html(\"Disconnected\");");
   response_message += F("        $('#vmixstatus').css(\"background-color\",\"red\");");
   response_message += F("      }");
-  response_message += F("    }"); 
+  response_message += F("    }");
   response_message += F("  }");
   response_message += F("} else {");
   response_message += F("  document.getElementById('tally').innerHTML('Your browser does not support EventSource!')");
   response_message += F("}");
-  
+
   response_message += F("</script>");
   response_message += F("<style>body {width: 100%;height: 100%;padding: 25px;}</style>");
   response_message += F("</head>");
@@ -724,7 +727,7 @@ void rootPageHandler()
   response_message += F("<h1 style='border-radius:0px 0px 10px 10px;background-color:#c6cdd2;text-align:center;'>vTally ID: ") + String(settings.tallyNumber) + F("</h1>");
 
   response_message += F("<form action='/save' method='post' enctype='multipart/form-data' data-ajax='false'>");
-  
+
   response_message += F("<div data-role='content' class='row' style='margin-bottom:.5rem;'>");
 
   response_message += F("<div class='col-md-6'>");
@@ -765,22 +768,22 @@ void rootPageHandler()
   response_message += F("<div class='col-sm-8'>");
   response_message += F("<select id='viscabaud' name='viscabaud' class='form-control'>");
   response_message += F("<option value='4800' ");
-  (String(settings.viscabaud) == "4800") ? response_message +="selected" : response_message +="";
+  (String(settings.viscabaud) == "4800") ? response_message += "selected" : response_message += "";
   response_message += F(">4800</option>");
   response_message += F("<option value='9600' ");
-  (String(settings.viscabaud) == "9600") ? response_message +="selected" : response_message +="";
+  (String(settings.viscabaud) == "9600") ? response_message += "selected" : response_message += "";
   response_message += F(">9600</option>");
   response_message += F("<option value='14400' ");
-  (String(settings.viscabaud) == "14400") ? response_message +="selected" : response_message +="";
+  (String(settings.viscabaud) == "14400") ? response_message += "selected" : response_message += "";
   response_message += F(">14400</option>");
   response_message += F("<option value='19200' ");
-  (String(settings.viscabaud) == "19200") ? response_message +="selected" : response_message +="";
+  (String(settings.viscabaud) == "19200") ? response_message += "selected" : response_message += "";
   response_message += F(">19200</option>");
   response_message += F("<option value='57600' ");
-  (String(settings.viscabaud) == "57600") ? response_message +="selected" : response_message +=""; 
+  (String(settings.viscabaud) == "57600") ? response_message += "selected" : response_message += "";
   response_message += F(">57600</option>");
   response_message += F("<option value='115200' ");
-  (String(settings.viscabaud) == "115200") ? response_message +="selected" : response_message +="";
+  (String(settings.viscabaud) == "115200") ? response_message += "selected" : response_message += "";
   response_message += F(">115200</option>");
   response_message += F("</select>");
   //response_message += F("<input id='viscabaud' class='form-control' type='number' size='64' min='2400' max='115200' name='viscabaud' value='") + String(settings.viscabaud) + F("'>");
@@ -799,7 +802,7 @@ void rootPageHandler()
   response_message += F("</div></div>");
 
   response_message += F("</td></tr></tbody></table>");
-  
+
   response_message += F("</div>");
 
   response_message += F("<div class='col-md-6'>");
@@ -840,7 +843,7 @@ void rootPageHandler()
   response_message += F("<div>&nbsp;&nbsp;</div>");
   response_message += F("<div id='pprv' style='display: -webkit-flex;display: flex;align-items: center;color:#ffffff;background-color:rgb(") + String(settings.prvred) + F(",") + String(settings.prvgreen) + F(",") + String(settings.prvblue) + F(")'>&nbsp;&nbsp;Preview&nbsp;&nbsp;</div>");
   response_message += F("</div></div></div>");
-  
+
   response_message += F("<div class='form-group row'>");
   response_message += F("<label for='off' class='col-sm-4 col-form-label'>Off Color (0-254)</label>");
   response_message += F("<div class='col-sm-8'>");
@@ -869,9 +872,9 @@ void rootPageHandler()
   response_message += F("<div class='form-group row'>");
   response_message += F("<label for='intensDim' class='col-sm-4 col-form-label'>Brightness Off (0-254)</label>");
   response_message += F("<div class='col-sm-8'>");
-  response_message += F("<input id='intensDim' class='form-control' type='number' style='width:5em;' size='8' min='0' max='254' name='intensDim' value='")+ String(settings.intensDim) + F("'>");
+  response_message += F("<input id='intensDim' class='form-control' type='number' style='width:5em;' size='8' min='0' max='254' name='intensDim' value='") + String(settings.intensDim) + F("'>");
   response_message += F("</div></div>");
-  
+
   response_message += F("<hr>");
 
   response_message += F("<div class='form-group row'>");
@@ -885,13 +888,13 @@ void rootPageHandler()
   response_message += F("</div></div>");
 
   response_message += F("</td></tr></tbody></table>");
-  
+
   response_message += F("</div></div></div>");
   response_message += F("</form>");
 
   response_message += F("<div data-role='content' class='row'>");
   response_message += F("&nbsp;</div>");
-  
+
   response_message += F("<div data-role='content' class='row'>");
 
   response_message += F("<div class='col-md-6'>");
@@ -902,14 +905,20 @@ void rootPageHandler()
   sprintf(ip, "%d.%d.%d.%d", WiFi.localIP()[0], WiFi.localIP()[1], WiFi.localIP()[2], WiFi.localIP()[3]);
   response_message += F("<tr><th>IP</th><td>") + String(ip) + F("</td><th>WiFi Signal Strength</th><td style='background-color:");
 
-  String color = "#ff0000"; 
+  String color = "#ff0000";
 
-  if (WiFi.RSSI() > -80) { color = "#ff0000"; }
-  if (WiFi.RSSI() > -67) { color = "#ffff00"; }
-  if (WiFi.RSSI() > -50) { color = "#00ff00"; }
+  if (WiFi.RSSI() > -80) {
+    color = "#ff0000";
+  }
+  if (WiFi.RSSI() > -67) {
+    color = "#ffff00";
+  }
+  if (WiFi.RSSI() > -50) {
+    color = "#00ff00";
+  }
 
   response_message += color;
-  
+
   response_message += F(";'>") + String(WiFi.RSSI()) + F(" dBm</td></tr>");
 
   response_message += F("<tr><th>MAC</th><td>") + String(WiFi.macAddress()) + F("</td>");
@@ -925,9 +934,9 @@ void rootPageHandler()
     response_message += F("<td style='background-color:yellow;'>Inactive");
   }
   response_message += F("</td>");
-  
+
   response_message += F("</tr>");
-  
+
   response_message += F("<tr><th>Device Name</th><td>") + String(deviceName) + F("</td>");
   response_message += F("<th>vMix Status</th><td id='vmixstatus'");
   if (vmixcon == 1)
@@ -939,7 +948,7 @@ void rootPageHandler()
     response_message += F("style='background-color:red;color:white;'>Disconnected");
   }
   response_message += F("</td>");
-  
+
   response_message += F("</tr>");
 
   response_message += F("<tr><th style='border-radius: 0px 0px 0px 10px;'>&nbsp;</th><td>&nbsp;</td>");
@@ -953,9 +962,9 @@ void rootPageHandler()
     response_message += F("style='border-radius: 0px 0px 10px 0px;background-color:red;color:white;'>Not Running");
   }
   response_message += F("</td>");
-  
+
   response_message += F("</tr>");
-  
+
   response_message += F("</tbody></table>");
   response_message += F("</div>");
 
@@ -966,11 +975,11 @@ void rootPageHandler()
 
   response_message += F("<div id='tally' style='height:90%;'></div>");
   response_message += F("<script>document.getElementById('tally').innerHTML=\"<object type='text/html' data='/tally' style='height:100%;width:100%;'></object>\";</script>");
-  
+
   response_message += F("</div>");
 
 
-  
+
   response_message += F("</div>");
 
   response_message += F("<h4 style='border-radius: 10px 10px 10px 10px;background-color:#c8c8c8;text-align:center;margin-bottom:0px;'>vTally v") + String(vers) + F(" &nbsp;&nbsp;&nbsp; &copy; 2021 by <a href=https://www.calihc.de target=_new>CaliHC</a></h4>");
@@ -1046,7 +1055,7 @@ void handleSave()
       doRestart = true;
     }
   }
-  
+
   if (httpServer.hasArg("prgred"))
   {
     if (httpServer.arg("prgred").toInt() >= 0 and httpServer.arg("prgred").toInt() < 255)
@@ -1096,7 +1105,7 @@ void handleSave()
       doRestart = true;
     }
   }
-  
+
   if (httpServer.hasArg("offred"))
   {
     if (httpServer.arg("offred").toInt() >= 0 and httpServer.arg("offred").toInt() < 255)
@@ -1226,7 +1235,7 @@ void connectTovMix()
     Serial.println(F("+--------------------+"));
     Serial.println(F("|  vMix Message Log  |"));
     Serial.println(F("+--------------------+"));
-    
+
     tallySetOff();
 
     // Subscribe to the tally events
@@ -1272,9 +1281,9 @@ void banner()
 void start()
 {
   tallySetConnecting();
-  
+
   loadSettings();
-  
+
   Serial.println(F(""));
   sprintf(deviceName, "vTally_%d", settings.tallyNumber);
   sprintf(apPass, "%s%s", deviceName, "_pwd");
@@ -1285,6 +1294,7 @@ void start()
   {
     viscaSerial.begin(settings.viscabaud, SWSERIAL_8N1, rxpin, txpin, false, 200);
     start_visca();
+    visca_power(true);
     connectTovMix();
   }
 }
@@ -1377,38 +1387,56 @@ void visca_power(bool turnon)
 
 void handle_visca(uint8_t *buf, size_t len)
 {
-  uint8_t modified[16];
+  uint8_t modified[18];
   size_t lastelement = 0;
-  for (int i = 0; (i < len && i < 16); i++)
-  {
-    modified[i] = buf[i];
-    lastelement = i;
+
+  if ((buf[0] == 0x01 && buf[1] == 0x00 && buf[2] == 0x00)) { // && buf[3] == 0x09) || (buf[0] == 0x01 && buf[1] == 0x00 && buf[2] == 0x00 && buf[3] == 0x06)) {
+    int j = 0;
+    for (int i = 8; (i < len && i < 18); i++)
+    {
+      modified[j] = buf[i];
+      lastelement = j;
+      j++;
+    }
+    //modified[0] = 0x01;
+  } else {
+    for (int i = 0; (i < len && i < 18); i++)
+    {
+      modified[i] = buf[i];
+      lastelement = i;
+    }
   }
+
+  Serial.print(F("| Payload short (hex):"));
+  debug(modified, lastelement+1);
+  Serial.println(F(""));
 
   // is this a PTZ?
   if (modified[1] == 0x01 && modified[2] == 0x06 && modified[3] == 0x01)
   {
     Serial.println(F("| PTZ CONTROL DETECTED... ADJUSTING SPEED"));
-    modified[4] = (int)ptzcurve(modified[4]);
-    modified[5] = (int)ptzcurve(modified[5]);
+    //modified[4] = (int)ptzcurve(modified[4]);
+    //modified[5] = (int)ptzcurve(modified[5]);
   }
+
+  // is this ZOOM?
   if (modified[1] == 0x01 && modified[2] == 0x04 && modified[3] == 0x07)
   {
     Serial.println(F("| ZOOM CONTROL DETECTED, ADJUSTING SPEED"));
-    int zoomspeed = modified[4] & 0b00001111;
-    zoomspeed = (int)zoomcurve(zoomspeed);
-    int zoomval = (modified[4] & 0b11110000) + zoomspeed;
-    modified[4] = zoomval;
+    //int zoomspeed = modified[4] & 0b00001111;
+    //zoomspeed = (int)zoomcurve(zoomspeed);
+    //int zoomval = (modified[4] & 0b11110000) + zoomspeed;
+    //modified[4] = zoomval;
   }
 
-  Serial1.write(modified, lastelement + 1);
-  Serial.println(F("| VISCA IP: Send ACK"));
-  udp.writeTo(modified, lastelement+1, lastclientip, lastclientport);
-  //udp.writeTo(ifclearcompl, ifclearcomplength, lastclientip, lastclientport);
-  //udp.writeTo(ack, 3, lastclientip, lastclientport);
-  //udp.writeTo(complete, 3, lastclientip, lastclientport);
-  //udp.writeTo(ack2, 3, lastclientip, lastclientport);
-  //udp.writeTo(complete, 2, lastclientip, lastclientport);
+  if (modified[1] == 0x01 && modified[2] == 0x04 && modified[3] == 0x08)
+  {
+    Serial.println(F("| FOCUS CONTROL DETECTED, ADJUSTING SPEED"));
+  }
+
+  viscaSerial.write(modified, lastelement + 1);
+  //Serial.println(F("| VISCA IP: Send ACK"));
+  udp.writeTo(modified, lastelement + 1, lastclientip, lastclientport);
 }
 
 void start_visca()
@@ -1430,7 +1458,7 @@ void start_visca()
 
       Serial.print(F("| Type of UDP datagram: "));
       Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast"
-                                                                             : "Unicast");
+                     : "Unicast");
       Serial.print(F("| Sender: "));
       Serial.print(lastclientip);
       Serial.print(F(":"));
@@ -1472,11 +1500,10 @@ void check_serial()
     debug(lastser_in, actual);
     if (lastclientport > 0)
       udp.writeTo(lastser_in, actual, lastclientip, lastclientport);
-      
+
     available = viscaSerial.available();
   }
 }
-
 
 void setup()
 {
@@ -1490,18 +1517,18 @@ void setup()
   httpServer.on("/", HTTP_GET, rootPageHandler);
   httpServer.on("/save", HTTP_POST, handleSave);
   httpServer.on("/tally", HTTP_GET, tallyPageHandler);
-  httpServer.on("/zend", [](){
+  httpServer.on("/zend", []() {
     //httpServer.sendHeader("Connection", "close");
     httpServer.sendHeader("Cache-Control", "no-cache");
     httpServer.sendHeader("Access-Control-Allow-Origin", "*");
-    
+
     if (currentState != oldState) {
-      httpServer.send(200, "text/event-stream", "event: message\ndata: refresh"+String(vmixcon)+"\nretry: 500\n\n");
+      httpServer.send(200, "text/event-stream", "event: message\ndata: refresh" + String(vmixcon) + "\nretry: 500\n\n");
       oldState = currentState;
     } else {
       httpServer.send(200, "text/event-stream", "event: message\ndata: norefresh\nretry: 500\n\n");
     }
-    
+
     //Serial.print(F("| FreeHeap: "));
     //Serial.println(ESP.getFreeHeap(),DEC);
   });
@@ -1509,7 +1536,7 @@ void setup()
   httpServer.begin();
 
   banner();
-  
+
   start();
 }
 
