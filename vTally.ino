@@ -132,6 +132,13 @@ const uint8_t irOff[] = {0x81, 0x01, 0x06, 0x09, 0x03, 0xff}; // Turn off IR con
 const uint8_t callLedOn[] = {0x81, 0x01, 0x33, 0x01, 0x01, 0xff};
 const uint8_t callLedOff[] = {0x81, 0x01, 0x33, 0x01, 0x00, 0xff};
 const uint8_t callLedBlink[] = {0x81, 0x01, 0x33, 0x01, 0x02, 0xff};
+const uint8_t ack[] = {0x90, 0x41, 0xff};
+const uint8_t ack2[] = {0x90, 0x42, 0xff};
+const uint8_t complete[] = {0x90, 0x51, 0xff};
+const uint8_t complete2[] = {0x90, 0x52, 0xff};
+const uint8_t ifclearcompl[] = {0x90, 0x50, 0xff};
+int ifclearcomplength = 3;
+
 /*
  * Video formats values:
  * Value    HDMI    SDI
@@ -1395,6 +1402,13 @@ void handle_visca(uint8_t *buf, size_t len)
   }
 
   Serial1.write(modified, lastelement + 1);
+  Serial.println(F("| VISCA IP: Send ACK"));
+  udp.writeTo(modified, lastelement+1, lastclientip, lastclientport);
+  //udp.writeTo(ifclearcompl, ifclearcomplength, lastclientip, lastclientport);
+  //udp.writeTo(ack, 3, lastclientip, lastclientport);
+  //udp.writeTo(complete, 3, lastclientip, lastclientport);
+  //udp.writeTo(ack2, 3, lastclientip, lastclientport);
+  //udp.writeTo(complete, 2, lastclientip, lastclientport);
 }
 
 void start_visca()
