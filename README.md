@@ -66,3 +66,7 @@ Network and tally settings can be edited on the built-in webpage. Just navigate 
 On this webpage the WiFi SSID, WiFi password, vMix hostname, tally number, LED colors, LED brightness and VISCA settings can be changed. It also shows some basic information of the device. 
 
 ![WebGUI](https://github.com/wasn-eu/vTally/raw/master/images/web.png)
+
+## Pictures of the shield PCB
+
+![PCB_2D](https://github.com/wasn-eu/vTally/raw/master/shield/PCB_2D.PNG) ![PCB_3D](https://github.com/wasn-eu/vTally/raw/master/shield/PCB_3D.PNG)
