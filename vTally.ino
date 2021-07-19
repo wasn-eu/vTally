@@ -13,7 +13,7 @@
 #include "FS.h"
 
 // Constants
-const float vers = 1.7;
+const float vers = 1.8;
 
 const int SsidMaxLength = 24;
 const int PassMaxLength = 24;
@@ -21,6 +21,8 @@ const int HostNameMaxLength = 24;
 const int TallyNumberMaxValue = 64;
 
 // LED setting
+#define LED_DATA D8
+bool data_state = false;
 #define LED_PIN D2
 #define LED_NUM 1
 Adafruit_NeoPixel leds = Adafruit_NeoPixel(LED_NUM, LED_PIN, NEO_GRB + NEO_KHZ800);
@@ -470,6 +472,14 @@ void handleData(String data)
           break;
         default:
           tallySetOff();
+      }
+
+      if (data_state) {
+        digitalWrite(LED_DATA, data_state);
+        data_state = false;
+      } else {
+        digitalWrite(LED_DATA, data_state);
+        data_state = true;
       }
     }
   }
@@ -1407,14 +1417,10 @@ void handle_visca(uint8_t *buf, size_t len)
     }
   }
 
-  Serial.print(F("| Payload short (hex):"));
-  debug(modified, lastelement+1);
-  Serial.println(F(""));
-
   // is this a PTZ?
   if (modified[1] == 0x01 && modified[2] == 0x06 && modified[3] == 0x01)
   {
-    Serial.println(F("| PTZ CONTROL DETECTED... ADJUSTING SPEED"));
+    Serial.println(F("| PTZ CONTROL DETECTED"));
     //modified[4] = (int)ptzcurve(modified[4]);
     //modified[5] = (int)ptzcurve(modified[5]);
   }
@@ -1422,7 +1428,7 @@ void handle_visca(uint8_t *buf, size_t len)
   // is this ZOOM?
   if (modified[1] == 0x01 && modified[2] == 0x04 && modified[3] == 0x07)
   {
-    Serial.println(F("| ZOOM CONTROL DETECTED, ADJUSTING SPEED"));
+    Serial.println(F("| ZOOM CONTROL DETECTED"));
     //int zoomspeed = modified[4] & 0b00001111;
     //zoomspeed = (int)zoomcurve(zoomspeed);
     //int zoomval = (modified[4] & 0b11110000) + zoomspeed;
@@ -1431,12 +1437,20 @@ void handle_visca(uint8_t *buf, size_t len)
 
   if (modified[1] == 0x01 && modified[2] == 0x04 && modified[3] == 0x08)
   {
-    Serial.println(F("| FOCUS CONTROL DETECTED, ADJUSTING SPEED"));
+    Serial.println(F("| FOCUS CONTROL DETECTED"));
   }
 
   viscaSerial.write(modified, lastelement + 1);
   //Serial.println(F("| VISCA IP: Send ACK"));
   udp.writeTo(modified, lastelement + 1, lastclientip, lastclientport);
+
+  if (data_state) {
+    digitalWrite(LED_DATA, data_state);
+    data_state = false;
+  } else {
+    digitalWrite(LED_DATA, data_state);
+    data_state = true;
+  }
 }
 
 void start_visca()
@@ -1457,19 +1471,19 @@ void start_visca()
       lastclientport = packet.remotePort();
 
       Serial.print(F("| Type of UDP datagram: "));
-      Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast"
+      Serial.print(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast"
                      : "Unicast");
-      Serial.print(F("| Sender: "));
+      Serial.print(F(", Sender: "));
       Serial.print(lastclientip);
       Serial.print(F(":"));
-      Serial.println(lastclientport);
-      Serial.print(F("| Receiver: "));
+      Serial.print(lastclientport);
+      Serial.print(F(", Receiver: "));
       Serial.print(packet.localIP());
       Serial.print(F(":"));
-      Serial.println(packet.localPort());
-      Serial.print(F("| Message length: "));
-      Serial.println(packet.length());
-      Serial.print(F("| Payload (hex):"));
+      Serial.print(packet.localPort());
+      Serial.print(F(", Message length: "));
+      Serial.print(packet.length());
+      Serial.print(F(" Payload (hex):"));
       debug(packet.data(), packet.length());
       Serial.println(F(""));
 
@@ -1513,6 +1527,8 @@ void setup()
   leds.begin();
   leds.setBrightness(50);
   leds.show();
+
+  pinMode(LED_DATA, OUTPUT);
 
   httpServer.on("/", HTTP_GET, rootPageHandler);
   httpServer.on("/save", HTTP_POST, handleSave);
