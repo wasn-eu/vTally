@@ -21,8 +21,8 @@ const int HostNameMaxLength = 24;
 const int TallyNumberMaxValue = 64;
 
 // LED setting
-#define LED_DATA D8
-bool data_state = false;
+//#define LED_DATA D8
+//bool data_state = false;
 #define LED_PIN D2
 #define LED_NUM 1
 Adafruit_NeoPixel leds = Adafruit_NeoPixel(LED_NUM, LED_PIN, NEO_GRB + NEO_KHZ800);
@@ -55,17 +55,17 @@ Settings defaultSettings = {
   "PASSWORD",
   "vmix_hostname",
   1,
-  255,
+  254,
   128,
   0,
-  255,
+  254,
   0,
-  255,
+  254,
   128,
   0,
   0,
   0,
-  255,
+  254,
   9600,
   52381
 };
@@ -103,8 +103,8 @@ SoftwareSerial viscaSerial;
 int udpstate = 0;
 
 //// RS232 Serial Settings
-const int txpin = D6;
-const int rxpin = D5;
+const int txpin = D5;
+const int rxpin = D6;
 
 //// Use the following constants and functions to modify the speed of PTZ commands
 const double ZOOMMULT = 0.3;      // speed multiplier for the zoom functions
@@ -473,7 +473,7 @@ void handleData(String data)
         default:
           tallySetOff();
       }
-
+/*
       if (data_state) {
         digitalWrite(LED_DATA, data_state);
         data_state = false;
@@ -481,6 +481,7 @@ void handleData(String data)
         digitalWrite(LED_DATA, data_state);
         data_state = true;
       }
+*/
     }
   }
   else
@@ -1444,6 +1445,7 @@ void handle_visca(uint8_t *buf, size_t len)
   //Serial.println(F("| VISCA IP: Send ACK"));
   udp.writeTo(modified, lastelement + 1, lastclientip, lastclientport);
 
+/*
   if (data_state) {
     digitalWrite(LED_DATA, data_state);
     data_state = false;
@@ -1451,6 +1453,7 @@ void handle_visca(uint8_t *buf, size_t len)
     digitalWrite(LED_DATA, data_state);
     data_state = true;
   }
+*/
 }
 
 void start_visca()
@@ -1528,7 +1531,7 @@ void setup()
   leds.setBrightness(50);
   leds.show();
 
-  pinMode(LED_DATA, OUTPUT);
+  //pinMode(LED_DATA, OUTPUT);
 
   httpServer.on("/", HTTP_GET, rootPageHandler);
   httpServer.on("/save", HTTP_POST, handleSave);
