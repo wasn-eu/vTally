@@ -69,4 +69,4 @@ On this webpage the WiFi SSID, WiFi password, vMix hostname, tally number, LED c
 
 ## Pictures of the shield PCB
 
-![PCB_2D](https://github.com/wasn-eu/vTally/raw/master/shield/PCB_2D.PNG) ![PCB_3D](https://github.com/wasn-eu/vTally/raw/master/shield/PCB_3D.PNG)
+![PCB_2D](https://github.com/wasn-eu/vTally/raw/master/shield/PCB_2D.jpg) ![PCB_3D](https://github.com/wasn-eu/vTally/raw/master/shield/PCB_3D.jpg)
