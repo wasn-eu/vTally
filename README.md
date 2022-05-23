@@ -16,9 +16,9 @@ For using the converter function you need the shield, see folder shield.
 
 #### 1. libraries needed
 
-|Adafruit_NeoPixel|
-|SoftwareSerial|
-|ESPAsyncUDP|
+|Adafruit_NeoPixel| found in libraries folder|
+|SoftwareSerial|default from arduino ide |
+|ESPAsyncUDP|found in kibraries folder|
 
 #### 2. Uploading static files
 
