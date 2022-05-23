@@ -1,5 +1,5 @@
 # vTally - Wireless Tally and VISCA converter for vMix
-# (c) 2021 by CaliHC.de
+# (c) 2022 by VID-PRO.de
 
 This is a tally system based on an esp8266 (Wemos D1 mini) and the vMix TCP API.
 It can convert VISCA UDP Control Signals to VISCA over serial.
