@@ -1,6 +1,7 @@
 /*
   vTally for vMix
-  Copyright 2021 CaliHC
+  Copyright 2022 by VID-PRO
+  https://www.vid-pro.de
 */
 
 #include <EEPROM.h>
@@ -13,7 +14,7 @@
 #include "FS.h"
 
 // Constants
-const float vers = 1.8;
+const float vers = 2.0;
 
 const int SsidMaxLength = 24;
 const int PassMaxLength = 24;
@@ -527,7 +528,7 @@ void tallyPageHandler()
 
   response_message += F("<html lang='en'>");
   response_message += F("<head>");
-  response_message += F("<title>vTally by CaliHC - ") + String(deviceName) + F("</title>");
+  response_message += F("<title>vTally by VID-PRO - ") + String(deviceName) + F("</title>");
   response_message += F("<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>");
   response_message += F("<meta charset='utf-8'>");
   response_message += F("<link rel='icon' type='image/x-icon' href='favicon.ico'>");
@@ -993,7 +994,7 @@ void rootPageHandler()
 
   response_message += F("</div>");
 
-  response_message += F("<h4 style='border-radius: 10px 10px 10px 10px;background-color:#c8c8c8;text-align:center;margin-bottom:0px;'>vTally v") + String(vers) + F(" &nbsp;&nbsp;&nbsp; &copy; 2021 by <a href=https://www.calihc.de target=_new>CaliHC</a></h4>");
+  response_message += F("<h4 style='border-radius: 10px 10px 10px 10px;background-color:#c8c8c8;text-align:center;margin-bottom:0px;'>vTally v") + String(vers) + F(" &nbsp;&nbsp;&nbsp; &copy; 2022 by <a href=https://www.vid-pro.de target=_new>VID-PRO</a></h4>");
 
   response_message += F("</body>");
   response_message += F("</html>");
@@ -1284,7 +1285,7 @@ void banner()
   Serial.print(F("|   vTally    v"));
   Serial.print(String(vers));
   Serial.println(F("  |"));
-  Serial.println(F("| (c)2021 by  CaliHC |"));
+  Serial.println(F("| (c)2022 by VID-PRO |"));
   Serial.println(F("+--------------------+"));
   Serial.println(F(""));
 }
