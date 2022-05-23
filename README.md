@@ -16,9 +16,9 @@ For using the converter function you need the shield, see folder shield.
 
 #### 1. libraries needed
 
-|Adafruit_NeoPixel
-|SoftwareSerial
-|ESPAsyncUDP
+|Adafruit_NeoPixel|
+|SoftwareSerial|
+|ESPAsyncUDP|
 
 #### 2. Uploading static files
 
